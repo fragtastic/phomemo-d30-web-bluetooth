@@ -41,6 +41,16 @@ const getWhitePixel = (canvas, imageData, x, y) => {
 	return red + green + blue > 0 ? 0 : 1;
 };
 
+const getBWPixel = (ctx, x, y) => {
+	const imageData = ctx.getImageData(x, y, 1, 1);
+	const [red, green, blue, alpha] = imageData.data;
+	/* Split alpha in half seems reasonable */
+	if (alpha < 128) {
+		return 0;	
+	}
+	return red + green + blue > 0 ? 0 : 1;
+}
+
 /**
  * Given a canvas, converts it to a byte array in the format expected by the Phomemo D30.
  * Adapted from {@link https://github.com/WebBluetoothCG/demos/tree/gh-pages/bluetooth-printer}
@@ -56,19 +66,13 @@ const getPrintData = (canvas) => {
 	const data = new Uint8Array((canvas.width / 8) * canvas.height + 8);
 	let offset = 0;
 	// Loop through image rows in bytes
-	for (let i = 0; i < canvas.height; ++i) {
-		for (let k = 0; k < canvas.width / 8; ++k) {
-			const k8 = k * 8;
+	for (let y = 0; y < canvas.height; y++) {
+		for (let x = 0; x < canvas.width; x+=8) {
 			// Pixel to bit position mapping
-			data[offset++] =
-				getWhitePixel(canvas, imageData, k8 + 0, i) * 128 +
-				getWhitePixel(canvas, imageData, k8 + 1, i) * 64 +
-				getWhitePixel(canvas, imageData, k8 + 2, i) * 32 +
-				getWhitePixel(canvas, imageData, k8 + 3, i) * 16 +
-				getWhitePixel(canvas, imageData, k8 + 4, i) * 8 +
-				getWhitePixel(canvas, imageData, k8 + 5, i) * 4 +
-				getWhitePixel(canvas, imageData, k8 + 6, i) * 2 +
-				getWhitePixel(canvas, imageData, k8 + 7, i);
+			for (let b = 0; b < 8; b++) {
+				data[offset] += getBWPixel(ctx, x + b, y) * Math.pow(2, 7-b);
+			}
+			offset++;
 		}
 	}
 
