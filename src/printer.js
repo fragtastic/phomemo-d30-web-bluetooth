@@ -41,6 +41,14 @@ const getWhitePixel = (canvas, imageData, x, y) => {
 	return red + green + blue > 0 ? 0 : 1;
 };
 
+/**
+ * Determines a given pixel to be either black (0) or white (1).
+ *
+ * @param {CanvasRenderingContext2D} ctx the canvas you're printing
+ * @param {number} x X of the pixel to check
+ * @param {number} y Y of the pixel to check
+ * @returns {number} 0 if pixel should be printed black, 1 if white
+ */
 const getBWPixel = (ctx, x, y) => {
 	const imageData = ctx.getImageData(x, y, 1, 1);
 	const [red, green, blue, alpha] = imageData.data;
