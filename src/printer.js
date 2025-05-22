@@ -59,7 +59,7 @@ const getBWPixel = (ctx, x, y) => {
  * @returns {Uint8Array} the byte array to transmit (in chunks) to the Bluetooth printer
  */
 const getPrintData = (canvas) => {
-	const ctx = canvas.getContext("2d");
+	const ctx = canvas.getContext("2d", { willReadFrequently: true });
 	const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
 
 	// Each 8 pixels in a row is represented by a byte
