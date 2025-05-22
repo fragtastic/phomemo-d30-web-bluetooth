@@ -50,8 +50,7 @@ const getWhitePixel = (canvas, imageData, x, y) => {
  * @returns {number} 0 if pixel should be printed black, 1 if white
  */
 const getBWPixel = (ctx, x, y) => {
-	const imageData = ctx.getImageData(x, y, 1, 1);
-	const [red, green, blue, alpha] = imageData.data;
+	const [red, green, blue, alpha] = ctx.getImageData(x, y, 1, 1).data;
 	/* Split alpha in half seems reasonable */
 	if (alpha < 128) {
 		return 0;	
