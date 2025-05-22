@@ -60,7 +60,6 @@ const getBWPixel = (ctx, x, y) => {
  */
 const getPrintData = (canvas) => {
 	const ctx = canvas.getContext("2d", { willReadFrequently: true });
-	const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
 
 	// Each 8 pixels in a row is represented by a byte
 	const data = new Uint8Array((canvas.width / 8) * canvas.height + 8);
